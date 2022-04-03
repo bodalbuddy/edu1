@@ -2,7 +2,7 @@ properties([pipelineTriggers([githubPush()])])
 
 pipeline {
     environment {
-        // name of the image without tag
+        // Global 변수 선언
         dockerRepo = "bodalbuddy/edu1"
         dockerCredentials = 'docker_ci'
         dockerImageVersioned = ""
@@ -14,18 +14,13 @@ pipeline {
     stages {
         /* checkout repo */
         stage('Checkout SCM') {
-            steps {
-                checkout([
-                 $class: 'GitSCM',
-                 //branches: [[name: '*/master']],
-                 //branches: [[name: 'refs/tags/${TAG}']],
-                 userRemoteConfigs: [[
-                    url: 'https://github.com/bodalbuddy/edu1.git',
-                    credentialsId: 'github_ci', 
-                 ]]
-                ])
-            }
+            steps{
+                script{
+                    checkout scm
+                 }
+            }   
         }
+        
         stage("Building docker image"){
             steps{
                 script{
